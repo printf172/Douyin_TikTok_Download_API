@@ -32,25 +32,26 @@
 #
 # ==============================================================================
 
-
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../../..'))
 import asyncio  # 异步I/O
-import os  # 系统操作
 import time  # 时间操作
 from urllib.parse import urlencode, quote  # URL编码
 import yaml  # 配置文件
 
 # 基础爬虫客户端和抖音API端点
-from crawlers.base_crawler import BaseCrawler
-from crawlers.douyin.web.endpoints import DouyinAPIEndpoints
+from Douyin_TikTok_Download_API.crawlers.base_crawler import BaseCrawler
+from Douyin_TikTok_Download_API.crawlers.douyin.web.endpoints import DouyinAPIEndpoints
 # 抖音接口数据请求模型
-from crawlers.douyin.web.models import (
+from Douyin_TikTok_Download_API.crawlers.douyin.web.models import (
     BaseRequestModel, LiveRoomRanking, PostComments,
     PostCommentsReply, PostDetail,
     UserProfile, UserCollection, UserLike, UserLive,
     UserLive2, UserMix, UserPost
 )
 # 抖音应用的工具类
-from crawlers.douyin.web.utils import (AwemeIdFetcher,  # Aweme ID获取
+from Douyin_TikTok_Download_API.crawlers.douyin.web.utils import (AwemeIdFetcher,  # Aweme ID获取
                                        BogusManager,  # XBogus管理
                                        SecUserIdFetcher,  # 安全用户ID获取
                                        TokenManager,  # 令牌管理
@@ -212,14 +213,15 @@ class DouyinWebCrawler:
     # 获取指定用户的信息
     async def handler_user_profile(self, sec_user_id: str):
         kwargs = await self.get_douyin_headers()
-        base_crawler = BaseCrawler(proxies=kwargs["proxies"], crawler_headers=kwargs["headers"])
-        async with base_crawler as crawler:
-            params = UserProfile(sec_user_id=sec_user_id)
-            endpoint = BogusManager.xb_model_2_endpoint(
-                DouyinAPIEndpoints.USER_DETAIL, params.dict(), kwargs["headers"]["User-Agent"]
-            )
-            response = await crawler.fetch_get_json(endpoint)
-        return response
+        # base_crawler = BaseCrawler(proxies=kwargs["proxies"], crawler_headers=kwargs["headers"])
+        # async with base_crawler as crawler:
+        params = UserProfile(sec_user_id=sec_user_id)
+        endpoint = BogusManager.xb_model_2_endpoint(
+            DouyinAPIEndpoints.USER_DETAIL, params.dict(), kwargs["headers"]["User-Agent"]
+        )
+            # response = await crawler.fetch_get_json(endpoint)
+        # return response
+        return endpoint, kwargs["headers"]
 
     # 获取指定视频的评论数据
     async def fetch_video_comments(self, aweme_id: str, cursor: int = 0, count: int = 20):
@@ -404,9 +406,9 @@ class DouyinWebCrawler:
         # print(result)
 
         # 获取指定用户的信息
-        # sec_user_id = "MS4wLjABAAAAW9FWcqS7RdQAWPd2AA5fL_ilmqsIFUCQ_Iym6Yh9_cUa6ZRqVLjVQSUjlHrfXY1Y"
-        # result = await self.handler_user_profile(sec_user_id)
-        # print(result)
+        sec_user_id = "MS4wLjABAAAAW9FWcqS7RdQAWPd2AA5fL_ilmqsIFUCQ_Iym6Yh9_cUa6ZRqVLjVQSUjlHrfXY1Y"
+        result = await self.handler_user_profile(sec_user_id)
+        print(result)
 
         # 获取单个视频评论数据
         # aweme_id = "7334525738793618688"

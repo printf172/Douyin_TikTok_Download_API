@@ -31,9 +31,11 @@
 # - https://github.com/Johnserf-Seed
 #
 # ==============================================================================
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../../..'))
 import asyncio
 import json
-import os
 import random
 import re
 import time
@@ -47,10 +49,10 @@ import httpx
 import qrcode
 import yaml
 
-from crawlers.douyin.web.xbogus import XBogus as XB
-from crawlers.douyin.web.abogus import ABogus as AB
+from Douyin_TikTok_Download_API.crawlers.douyin.web.xbogus import XBogus as XB
+from Douyin_TikTok_Download_API.crawlers.douyin.web.abogus import ABogus as AB
 
-from crawlers.utils.api_exceptions import (
+from Douyin_TikTok_Download_API.crawlers.utils.api_exceptions import (
     APIError,
     APIConnectionError,
     APIResponseError,
@@ -58,8 +60,8 @@ from crawlers.utils.api_exceptions import (
     APIUnauthorizedError,
     APINotFoundError,
 )
-from crawlers.utils.logger import logger
-from crawlers.utils.utils import (
+from Douyin_TikTok_Download_API.crawlers.utils.logger import logger
+from Douyin_TikTok_Download_API.crawlers.utils.utils import (
     gen_random_str,
     get_timestamp,
     extract_valid_urls,
